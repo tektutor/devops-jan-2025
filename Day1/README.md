@@ -294,7 +294,12 @@ docker run -d --name lb --hostname lb -p 80:80 nginx:latest
 docker ps
 ```
 
-Let's configure lb container worker as a load balancer, we need to update nginx.conf file in lb container as shown below
+Let's copy the nginx.conf file from lb container to local machine
+```
+docker cp lb:/etc/nginx/nginx.conf .
+```
+
+Let's update the nginx.conf file we downloaded from container as shown below
 ```
 user nginx;
 worker_processes auto;
@@ -318,5 +323,40 @@ http {
         }
     }
 }
+```
 
+Let's copy the updated nginx.conf from local machine back to lb container
+```
+docker cp nginx.conf lb:/etc/nginx/nginx.conf
+```
+
+Let's restart the lb container to apply config changes
+```
+docker restart lb
+docker ps
+```
+
+Let's customize web1 container's html page
+```
+echo "Server 1" > index.html
+docker cp index.html web1:/usr/share/nginx/html/index.html
+```
+
+Let's customize web2 container's html page
+```
+echo "Server 2" > index.html
+docker cp index.html web2:/usr/share/nginx/html/index.html
+```
+
+Let' customize web2 container's html page
+```
+echo "Server 2" > index.html
+docker cp index.html web2:/usr/share/nginx/html/index.html
+```
+
+Now, let's test if lb is working as expected
+```
+http://localhost:80
+http://localhost:80
+http://localhost:80
 ```
