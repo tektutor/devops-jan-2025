@@ -55,6 +55,9 @@
       - Microsoft Hyper-V
 </pre>
 
+## Hypervisor - High Level Architecture
+![Hypervisor](HypervisorHighLevelArchitecture.png)
+
 ## Info - What is the minimal number of Physical servers required to host 1000 Virtual Machine on top of Hypervisor software ?
 <pre>
 - 1 Physical server is enough to host 1000 Virtual Machines
