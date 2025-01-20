@@ -235,3 +235,88 @@ docker run -dit --name c1 --hostname c1 ubuntu:24.04 /bin/bash
 ```
 docker ps
 ```
+
+## Lab - Stopping a running container
+```
+docker stop container-name
+```
+
+## Lab - Starting a exited container
+```
+docker start container-name
+```
+
+## Lab - Restarting a running container to apply config changes
+```
+docker restart container-name
+```
+
+## Lab - Deleting a exited container
+```
+docker rm container-name
+```
+
+## Lab - Deleting a running container forcibly
+```
+docker rm -f container-name
+```
+
+## Lab - Deleting a running container gracefully
+```
+docker stop container-name
+docker rm container-name
+```
+
+## Lab - Deleting a container image from Local Docker Registry
+```
+docker images
+docker rmi ubuntu:24.04
+docker images
+```
+
+## Lab - Port forwarding
+
+Let's create 3 web server containers
+```
+docker run -d --name web1 --hostname web1 nginx:latest
+docker run -d --name web2 --hostname web2 nginx:latest
+docker run -d --name web3 --hostname web3 nginx:latest
+```
+
+Let's list the containers
+```
+docker ps
+```
+
+Let's create a loadbalancer container with port-forwarding for external access
+```
+docker run -d --name lb --hostname lb -p 80:80 nginx:latest
+docker ps
+```
+
+Let's configure lb container worker as a load balancer, we need to update nginx.conf file in lb container as shown below
+```
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid       /var/run/nginx.pid;
+
+events {
+   worker_connections 1024;
+}
+
+http {
+    upstream backend {
+        server 172.17.0.2:80;
+        server 172.17.0.3:80;
+        server 172.17.0.4:80;
+    }
+
+    server {
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+}
+
+```
