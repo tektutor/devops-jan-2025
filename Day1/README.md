@@ -205,3 +205,18 @@ sudo su $USER
 docker --version
 docker images
 ```
+
+## Lab - Finding the docker version
+```
+docker --version
+```
+
+## Lab - Finding the status of docker application engine linux service
+```
+sudo systemctl status docker
+```
+
+## Lab - Listing the docker images from your local docker registry
+```
+docker images
+```
