@@ -225,3 +225,13 @@ docker info
 ```
 docker images
 ```
+
+## Lab - Creating and running a new container in background
+```
+docker run -dit --name c1 --hostname c1 ubuntu:24.04 /bin/bash
+```
+
+## Lab - Listing the currently running containers
+```
+docker ps
+```
