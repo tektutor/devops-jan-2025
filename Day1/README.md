@@ -216,6 +216,11 @@ docker --version
 sudo systemctl status docker
 ```
 
+## Lab - Finding more details about your docker installation
+```
+docker info
+```
+
 ## Lab - Listing the docker images from your local docker registry
 ```
 docker images
