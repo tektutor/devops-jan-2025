@@ -360,3 +360,69 @@ http://localhost:80
 http://localhost:80
 http://localhost:80
 ```
+
+## Lab - Storing mysql database, tables in an external storage
+Let's create a folder on the local machine
+```
+mkdir -p /tmp/msql
+```
+
+Let's mount the /tmp/mysql inside mysql container at mount point /var/lib/mysql( default folder where mysql stores db and tables )
+```
+
+docker run -d --name mysql --hostname mysql -v /tmp/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root@123 mysql:latest
+docker ps
+```
+
+Let's get inside the mysql container shell
+```
+docker exec -it mysql sh
+```
+
+Let's use mysql client to connect with mysql server, type root@123 as the password when prompted 
+```
+mysql -u root -p
+```
+
+Let's create a database, table and insert some records
+```
+CREATE DATABASE tektutor;
+USE tektutor;
+
+CREATE TABLE training ( id INT NOT NULL, name VARCHAR(250) NOT NULL, from VARCHAR(100) NOT NULL, to VARCHAR(100) NOT NULL, city VARCHAR(200) NOT NULL, PRIMARY KEY(id) );
+
+INSERT INTO training VALUES ( 1, "DevOps", "20th Jan 2025", "24th Jan 2025", "Hyderabad" );
+INSERT INTO training VALUES ( 2, "Advanced Openshift", "27th Jan 2025", "6th Feb 2025", "Bengaluru" );
+
+SELECT * FROM training;
+```
+
+Let's exit from mysql client and exit the mysql container
+```
+exit
+exit
+```
+
+Let's delete the mysql container
+```
+docker rm -f mysql
+```
+
+Let' create a new mysql container using the same external storage path
+```
+docker run -d --name mysql --hostname mysql -v /tmp/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root@123 mysql:latest
+docker ps
+```
+
+Let's get inside the new mysql container shell
+```
+docker exec -it mysql sh
+mysql -u root -p
+SHOW DATABASES;
+USE tektutor;
+SHOW TABLES;
+SELECT * FROM training;
+```
+
+As you noticed, though we deleted the mysql container and recreated a new mysql container, the database and tables along with is records are intact.  If we had used mysql container storage we would have lost the data when we deleted the container, hence container's must used as an immutable resource as they are temporary resources.  
+
