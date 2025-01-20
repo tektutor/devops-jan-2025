@@ -1,3 +1,15 @@
+## Processors Packaging
+- Two types of Packaing
+  1. Single Chip Module (SCM - One IC has one Processor )
+  2. Multiple Chip Module (MCM - One IC will have multiple Processors ) 
+
+## Server Grade Motherboards
+- supports multiple Processor Sockets
+- Assume the Server has 4 Processors Sockets
+- Assume we are installing MCM based Processor, i.e each IC with 4 Processors
+- Assumne each Processor has 256 CPU Cores
+- Total CPU Cores = 16 x 256 = 4096 CPU Cores
+
 ## Info - How many physical servers are required to support 1000 Operating System when no virtualization supported
 - 1000 Physical servers are required
 - Your organization has to procure 1000 servers
