@@ -132,6 +132,12 @@
   - we could develop an ansible role to install Oracle Database in Windows 2016/2019 Server, Ubuntu Linux, etc
 </pre>
 
+## Ansible Playbook
+<pre>
+- is a YAML file 
+- it invokes bunch of Ansible module, roles in a particular order to automate configuration management activity
+</pre>
+
 ## Ansible Collections
 <pre>
 - is a reusable code that has many different kinds of reusable code in ansible
