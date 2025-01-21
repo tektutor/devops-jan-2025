@@ -143,7 +143,7 @@
 ## Lab - Install Ansible Core in Ubuntu
 ```
 sudo apt update
-sudo apt install -y ansible-core
-sudo apt install python3-pip -y
-pip install "pywinrm>=0.3.0" --break-system-packages
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible -y
 ```
