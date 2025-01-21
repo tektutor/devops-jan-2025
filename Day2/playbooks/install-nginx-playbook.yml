@@ -2,9 +2,9 @@
   hosts: all
   become: yes
   tasks:
-  - name: Install Extra Packages for Enterprise Linux (EPEL) 
-    when: ( ansible_distribution == "Rocky" and ansible_os_family == "RedHat" )
-    yum: name=epel state=latest
+    #  - name: Install Extra Packages for Enterprise Linux (EPEL) 
+    # when: ( ansible_distribution == "Rocky" and ansible_os_family == "RedHat" )
+    # yum: name=epel state=latest
 
   - name: Install nginx web server
     when: ( ansible_distribution == "Rocky" and ansible_os_family == "RedHat" )
