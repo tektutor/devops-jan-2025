@@ -196,6 +196,18 @@ rocky1 ansible_user=root ansible_port=2001 ansible_host=localhost ansible_privat
 rocky2 ansible_user=root ansible_port=2002 ansible_host=localhost ansible_private_key_file=~/.ssh/id_ed25519
 ```
 
+The static inventory could also be refactored to avoid redundancy as shown below
+```
+[all]
+rocky1 ansible_port=2001
+rocky2 ansible_port=2002
+
+[all:vars]
+ansible_user=root 
+ansible_host=localhost
+ansible_private_key_file=~/.ssh/id_ed25519
+```
+
 Now, let's see if we are able to run the ansible playbook
 ```
 cd ~/devops-jan-2025
