@@ -153,3 +153,53 @@ sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible -y
 ```
+
+## Lab - Prepare a custom docker image to use an ansible node
+Pull TekTutor training repository
+```
+cd ~/devops-jan-2025
+git pull
+cd Day2/CustomAnsibleNodeDockerImage
+ssh-keygen
+cp ~/.ssh/id_rsa.pub authorized_keys
+docker build -t tektutor/rocky-ansible-node:latest .
+docker images
+```
+
+Create couple of containers
+```
+docker run -d --name rocky1 --hostname rocky1 -p 2001:22 -p 8001:80 tektutor/rocky-ansible-node:latest
+docker run -d --name rocky2 --hostname rocky2 -p 2002:22 -p 8002:80 tektutor/rocky-ansible-node:latest
+docker ps
+```
+
+Check if you are able to ssh into those containers ( it shouldn't prompt for password )
+```
+ssh -p 2001 root@localhost
+exit
+ssh -p 2002 root@localhost
+```
+
+Now create your first anisble playbook in a file called ping-playbook.yml
+```
+- name: This playbook helps to verify if ansible is able to communicate with the ansible nodes
+  hosts: all
+  tasks:
+  - name: Ping ansible node
+    ping
+```
+
+Now let's create a static inventory file ( file name is inventory )
+```
+[all]
+rocky1 ansible_user=root ansible_port=2001 ansible_host=localhost ansible_private_key_file=~/.ssh/id_ed25519
+rocky2 ansible_user=root ansible_port=2002 ansible_host=localhost ansible_private_key_file=~/.ssh/id_ed25519
+```
+
+Now, let's see if we are able to run the ansible playbook
+```
+cd ~/devops-jan-2025
+git pull
+cd Day2/playbooks
+ansible-playbook -i inventory ping-playbook.yml
+```
