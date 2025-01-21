@@ -3,8 +3,8 @@
 ## Configuration Management Tool Overview
 <pre>
 - is used to automate system administration activities
-- the assumptions we already a machine with some OS ( Unix, Linux, Windows or Mac )
-- this tool is used to install/configure stuffs on a already provisioned machine
+- the assumption is we already have a machine with some OS ( Unix, Linux, Windows or Mac )
+- this tool is used to install/configure stuffs on an already provisioned machine
 - examples
   - Chef
   - Puppet
