@@ -208,6 +208,12 @@ ansible_host=localhost
 ansible_private_key_file=~/.ssh/id_ed25519
 ```
 
+Running an ansible ad-hoc command
+```
+ansible -i inventory all -m ping
+ansible -i inventory rocky1 -m setup
+```
+
 Now, let's see if we are able to run the ansible playbook
 ```
 cd ~/devops-jan-2025
