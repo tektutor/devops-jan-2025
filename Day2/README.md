@@ -19,7 +19,7 @@
 - the DSL used by Puppet is Puppet language ( a proprietary declarative language )
 - Puppet installation is very complex and time consuming
 - learning curve is quite steep
-- uses proprietary tools on the servers that needs to be managed by chef
+- uses proprietary tools on the servers that needs to be managed by Puppet
 - Puppet architecture is very complex
 </pre>
 
