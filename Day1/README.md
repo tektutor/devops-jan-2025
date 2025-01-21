@@ -235,3 +235,194 @@ docker run -dit --name c1 --hostname c1 ubuntu:24.04 /bin/bash
 ```
 docker ps
 ```
+
+## Lab - Stopping a running container
+```
+docker stop container-name
+```
+
+## Lab - Starting a exited container
+```
+docker start container-name
+```
+
+## Lab - Restarting a running container to apply config changes
+```
+docker restart container-name
+```
+
+## Lab - Deleting a exited container
+```
+docker rm container-name
+```
+
+## Lab - Deleting a running container forcibly
+```
+docker rm -f container-name
+```
+
+## Lab - Deleting a running container gracefully
+```
+docker stop container-name
+docker rm container-name
+```
+
+## Lab - Deleting a container image from Local Docker Registry
+```
+docker images
+docker rmi ubuntu:24.04
+docker images
+```
+
+## Lab - Port forwarding
+
+Let's create 3 web server containers
+```
+docker run -d --name web1 --hostname web1 nginx:latest
+docker run -d --name web2 --hostname web2 nginx:latest
+docker run -d --name web3 --hostname web3 nginx:latest
+```
+
+Let's list the containers
+```
+docker ps
+```
+
+Let's create a loadbalancer container with port-forwarding for external access
+```
+docker run -d --name lb --hostname lb -p 80:80 nginx:latest
+docker ps
+```
+
+Let's copy the nginx.conf file from lb container to local machine
+```
+docker cp lb:/etc/nginx/nginx.conf .
+```
+
+Let's update the nginx.conf file we downloaded from container as shown below
+```
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid       /var/run/nginx.pid;
+
+events {
+   worker_connections 1024;
+}
+
+http {
+    upstream backend {
+        server 172.17.0.2:80;
+        server 172.17.0.3:80;
+        server 172.17.0.4:80;
+    }
+
+    server {
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+}
+```
+
+Let's copy the updated nginx.conf from local machine back to lb container
+```
+docker cp nginx.conf lb:/etc/nginx/nginx.conf
+```
+
+Let's restart the lb container to apply config changes
+```
+docker restart lb
+docker ps
+```
+
+Let's customize web1 container's html page
+```
+echo "Server 1" > index.html
+docker cp index.html web1:/usr/share/nginx/html/index.html
+```
+
+Let's customize web2 container's html page
+```
+echo "Server 2" > index.html
+docker cp index.html web2:/usr/share/nginx/html/index.html
+```
+
+Let' customize web3 container's html page
+```
+echo "Server 3" > index.html
+docker cp index.html web3:/usr/share/nginx/html/index.html
+```
+
+Now, let's test if lb is working as expected
+```
+http://localhost:80
+http://localhost:80
+http://localhost:80
+```
+
+## Lab - Storing mysql database, tables in an external storage
+Let's create a folder on the local machine
+```
+mkdir -p /tmp/msql
+```
+
+Let's mount the /tmp/mysql inside mysql container at mount point /var/lib/mysql( default folder where mysql stores db and tables )
+```
+
+docker run -d --name mysql --hostname mysql -v /tmp/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root@123 mysql:latest
+docker ps
+```
+
+Let's get inside the mysql container shell
+```
+docker exec -it mysql sh
+```
+
+Let's use mysql client to connect with mysql server, type root@123 as the password when prompted 
+```
+mysql -u root -p
+```
+
+Let's create a database, table and insert some records
+```
+CREATE DATABASE tektutor;
+USE tektutor;
+
+CREATE TABLE training ( id INT NOT NULL, name VARCHAR(250) NOT NULL, from VARCHAR(100) NOT NULL, to VARCHAR(100) NOT NULL, city VARCHAR(200) NOT NULL, PRIMARY KEY(id) );
+
+INSERT INTO training VALUES ( 1, "DevOps", "20th Jan 2025", "24th Jan 2025", "Hyderabad" );
+INSERT INTO training VALUES ( 2, "Advanced Openshift", "27th Jan 2025", "6th Feb 2025", "Bengaluru" );
+
+SELECT * FROM training;
+```
+
+Let's exit from mysql client and exit the mysql container
+```
+exit
+exit
+```
+
+Let's delete the mysql container
+```
+docker rm -f mysql
+```
+
+Let' create a new mysql container using the same external storage path
+```
+docker run -d --name mysql --hostname mysql -v /tmp/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root@123 mysql:latest
+docker ps
+```
+
+Let's get inside the new mysql container shell
+```
+docker exec -it mysql sh
+mysql -u root -p
+SHOW DATABASES;
+USE tektutor;
+SHOW TABLES;
+SELECT * FROM training;
+```
+
+As you noticed, though we deleted the mysql container and recreated a new mysql container, the database and tables along with is records are intact.  If we had used mysql container storage we would have lost the data when we deleted the container, hence container's must used as an immutable resource as they are temporary resources.  
+
