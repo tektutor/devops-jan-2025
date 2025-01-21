@@ -348,10 +348,10 @@ echo "Server 2" > index.html
 docker cp index.html web2:/usr/share/nginx/html/index.html
 ```
 
-Let' customize web2 container's html page
+Let' customize web3 container's html page
 ```
-echo "Server 2" > index.html
-docker cp index.html web2:/usr/share/nginx/html/index.html
+echo "Server 3" > index.html
+docker cp index.html web3:/usr/share/nginx/html/index.html
 ```
 
 Now, let's test if lb is working as expected
