@@ -24,5 +24,63 @@ terraform -install-autocomplete
 Checking terraform installation
 ```
 terraform -version
-
 ```
+
+## Lab - Write your first terraform script
+
+We need to create a folder to keep the terraform scripts
+```
+cd ~
+mkdir -p create-docker-container
+cd create-docker-container
+```
+
+Create a file name main.tf with the below content
+```
+terraform {
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0.1"
+    }
+  }
+}
+
+provider "docker" {}
+
+resource "docker_image" "nginx" {
+  name         = "nginx"
+  keep_locally = false
+}
+
+resource "docker_container" "nginx" {
+  image = docker_image.nginx.image_id
+  name  = "tutorial"
+
+  ports {
+    internal = 80
+    external = 8000
+  }
+}
+```
+
+Next, we need to download the terraform docker_image provider 
+```
+terraform init
+```
+
+Next, we can run the terraform script
+```
+terraform apply
+```
+
+Now check if the containers are created
+```
+docker ps
+```
+
+Once you are done with the lab exercise, you can cleanup/discard the resources created by Terraform 
+```
+terraform destroy
+```
+
