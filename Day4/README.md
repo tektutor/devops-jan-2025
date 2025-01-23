@@ -86,5 +86,6 @@ terraform destroy
 
 Expected output
 ![image](https://github.com/user-attachments/assets/f0a706d1-b4cf-495f-ac7d-d338bbacffea)
+![image](https://github.com/user-attachments/assets/fd61166a-c26a-4c03-bcbe-18709b0f7cb9)
 
 
