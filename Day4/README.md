@@ -28,6 +28,7 @@ terraform -version
 
 Expected output
 ![image](https://github.com/user-attachments/assets/0bb2f24b-307d-429e-aa03-d6d3c9705269)
+![image](https://github.com/user-attachments/assets/63907201-a0e1-4cbc-9d2c-d88b9b65a528)
 
 
 ## Lab - Write your first terraform script
