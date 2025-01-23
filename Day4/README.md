@@ -91,4 +91,77 @@ Expected output
 ![image](https://github.com/user-attachments/assets/328f9615-2369-4cc1-9506-ea902d73d7b3)
 ![image](https://github.com/user-attachments/assets/334c2a60-d910-44bd-a602-bf2921b6928c)
 
+## Lab - Provisioning AWS ec2 instance via Terraform
 
+We need to first export the AWS Access key and respective secret key
+```
+export AWS_ACCESS_KEY_ID="your-aws-access-key"
+export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
+export AWS_REGION="ap-south-1"
+```
+Then create a folder 
+```
+mkdir -p ~/create-ec2-instance
+```
+
+Create a file name main.tf with the below code
+```
+provider "aws" {
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
+resource "aws_security_group" "sg_8080" {
+  name = "terraform-learn-state-sg-8080"
+  ingress {
+    from_port   = "8080"
+    to_port     = "8080"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "example" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.sg_8080.id]
+  user_data              = <<-EOF
+              #!/bin/bash
+              apt-get update
+              apt-get install -y apache2
+              sed -i -e 's/80/8080/' /etc/apache2/ports.conf
+              echo "Hello World" > /var/www/html/index.html
+              systemctl restart apache2
+              EOF
+  tags = {
+    Name = "terraform-learn-state-ec2"
+  }
+}
+```
+
+Let's run the terraform script
+```
+terraform init
+terraform apply 
+```
