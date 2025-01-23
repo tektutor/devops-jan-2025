@@ -23,7 +23,7 @@ locals {
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
 	ssh_user	= "ubuntu"
 	key_name	= "terraform"
-	private_key_path= "~/Downloads/terraform.pem"
+	private_key_path= local_file.ssh_key.filename 
 }
 
 resource "aws_vpc" "tektutor_vpc" {
