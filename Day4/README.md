@@ -84,3 +84,7 @@ Once you are done with the lab exercise, you can cleanup/discard the resources c
 terraform destroy
 ```
 
+Expected output
+![image](https://github.com/user-attachments/assets/f0a706d1-b4cf-495f-ac7d-d338bbacffea)
+
+
