@@ -120,7 +120,7 @@ resource "aws_key_pair" "kp" {
 }
 
 resource "local_file" "ssh_key" {
-  filename = "~/Downloads/terraform.pem"
+  filename = "./terraform.pem"
   content = tls_private_key.pk.private_key_pem
   file_permission = "0400"
 }
@@ -130,7 +130,7 @@ locals {
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
 	ssh_user	= "ubuntu"
 	key_name	= "terraform"
-	private_key_path= "~/Downloads/terraform.pem"
+	private_key_path= "./terraform.pem"
 }
 
 resource "aws_vpc" "tektutor_vpc" {
