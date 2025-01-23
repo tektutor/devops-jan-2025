@@ -225,7 +225,7 @@ resource "aws_route_table_association" "tektutor_route_table_association" {
 resource "aws_subnet" "tektutor_subnet_1" {
 	vpc_id = aws_vpc.tektutor_vpc.id
 	cidr_block = "192.168.1.0/24"
-  	availability_zone = "us-east-1a"
+  	availability_zone = "ap-south-1a"
   	map_public_ip_on_launch = "true"
 
 	tags = {
