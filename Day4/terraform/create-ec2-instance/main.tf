@@ -120,7 +120,7 @@ resource "aws_network_interface" "tektutor_nic" {
 }
 
 
-resource "aws_instance" "ubuntu1" {
+resource "aws_instance" "jegan_ubuntu1" {
 	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
 	key_name = "terraform"
@@ -133,6 +133,20 @@ resource "aws_instance" "ubuntu1" {
 	//user_data = file("install_apache.sh")
 
 	tags = {
-		Name = "ubuntu1"
+		Name = "jegan-ubuntu1"
+	}
+
+	provisioner "remote-exec" {
+	  inline = ["echo 'Waiting for ec2 instance to boot'"]	
+	  connection {
+		type = "ssh"
+		user = "ubuntu"
+		private_key = file("./terraform.pem")
+		host = aws_instance.jegan_ubuntu1.public_ip
+	  }
+	}
+
+	provisioner "local-exec" {
+	    command = "ansible-playbook -i ${aws_instance.jegan_ubuntu1.public_ip} --private-key ${local.private_key_path} install-tmux-playbook.yml" 
 	}
 }
