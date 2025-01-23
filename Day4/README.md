@@ -165,3 +165,6 @@ Let's run the terraform script
 terraform init
 terraform apply 
 ```
+
+Expected output
+![image](https://github.com/user-attachments/assets/2ae184a1-668f-4e88-83a4-7198082b1c74)
