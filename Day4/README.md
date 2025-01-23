@@ -245,7 +245,7 @@ resource "aws_network_interface" "tektutor_nic" {
 
 
 resource "aws_instance" "ubuntu1" {
-	ami = "ami-09773b29dffbef1f2"
+	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
 	key_name = "terraform"
 	
