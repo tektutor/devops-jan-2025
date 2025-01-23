@@ -5,8 +5,8 @@ locals {
 	vpc_id 		= aws_vpc.tektutor_vpc.id
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
 	ssh_user	= "ubuntu"
-	key_name	= "terraform"
-	private_key_path= "./terraform.pem"
+	key_name	= var.key_name
+	private_key_path= "./${var.key_name}.pem"
 }
 
 resource "aws_vpc" "tektutor_vpc" {
