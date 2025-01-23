@@ -1,4 +1,3 @@
-
 provider "aws" {
 }
 
@@ -12,7 +11,7 @@ resource "aws_key_pair" "kp" {
 }
 
 resource "local_file" "ssh_key" {
-  filename = "~/Downloads/terraform.pem"
+  filename = "./terraform.pem"
   content = tls_private_key.pk.private_key_pem
   file_permission = "0400"
 }
@@ -22,8 +21,7 @@ locals {
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
 	ssh_user	= "ubuntu"
 	key_name	= "terraform"
-	private_key_path= local_file.ssh_key.filename 
-  	priv_keys = tolist(tls_private_key.pk[*].private_key_pem)
+	private_key_path= "./terraform.pem"
 }
 
 resource "aws_vpc" "tektutor_vpc" {
@@ -140,7 +138,7 @@ resource "aws_network_interface" "tektutor_nic" {
 resource "aws_instance" "ubuntu1" {
 	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
-	key_name = "terraform.pem"
+	key_name = "terraform"
 	
 	network_interface {
     		network_interface_id = aws_network_interface.tektutor_nic.id
