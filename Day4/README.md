@@ -113,6 +113,22 @@ provider "aws" {
 	secret_key	= "your-secret-key"
 }
 
+resource "tls_private_key" "pk" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "kp" {
+  key_name   = "myKey"       # Create a "myKey" to AWS!!
+  public_key = tls_private_key.pk.public_key_openssh
+}
+
+resource "local_file" "ssh_key" {
+  filename = "~/Downloads/terraform.pem"
+  content = tls_private_key.pk.private_key_pem
+  file_permission = "0400"
+}
+
 locals {
 	vpc_id 		= aws_vpc.tektutor_vpc.id
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
@@ -271,3 +287,4 @@ terraform apply
 ```
 
 Expected output
+![image](https://github.com/user-attachments/assets/2e01bbe2-f3eb-4f5f-ba4a-d4b25287552f)
