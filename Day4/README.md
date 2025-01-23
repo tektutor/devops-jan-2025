@@ -108,9 +108,6 @@ Create a file name main.tf with the below code
 ```
 
 provider "aws" {
-	region 		= "us-east-1"
-	access_key	= "your-access-key"
-	secret_key	= "your-secret-key"
 }
 
 resource "tls_private_key" "pk" {
