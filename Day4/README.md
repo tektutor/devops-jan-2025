@@ -26,6 +26,10 @@ Checking terraform installation
 terraform -version
 ```
 
+Expected output
+![image](https://github.com/user-attachments/assets/0bb2f24b-307d-429e-aa03-d6d3c9705269)
+
+
 ## Lab - Write your first terraform script
 
 We need to create a folder to keep the terraform scripts
