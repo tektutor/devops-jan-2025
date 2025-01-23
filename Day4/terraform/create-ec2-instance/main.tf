@@ -23,6 +23,7 @@ locals {
 	ssh_user	= "ubuntu"
 	key_name	= "terraform"
 	private_key_path= local_file.ssh_key.filename 
+  	priv_keys = tolist(tls_private_key.pk[*].private_key_pem)
 }
 
 resource "aws_vpc" "tektutor_vpc" {
@@ -139,7 +140,7 @@ resource "aws_network_interface" "tektutor_nic" {
 resource "aws_instance" "ubuntu1" {
 	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
-	key_name = "terraform"
+	key_name = "terraform.pem"
 	
 	network_interface {
     		network_interface_id = aws_network_interface.tektutor_nic.id
