@@ -5,8 +5,8 @@ locals {
 	vpc_id 		= aws_vpc.tektutor_vpc.id
 	subnet_id	= aws_subnet.tektutor_subnet_1.id
 	ssh_user	= "ubuntu"
-	key_name	= "terraform"
-	private_key_path= "./terraform.pem"
+	key_name	= var.ssh_key
+	private_key_path= "./${var.ssh_key}.pem"
 }
 
 resource "aws_vpc" "tektutor_vpc" {
@@ -119,11 +119,10 @@ resource "aws_network_interface" "tektutor_nic" {
 	}
 }
 
-
-resource "aws_instance" "jegan_ubuntu1" {
+resource "aws_instance" "${var.resource_name_prefix}_ubuntu1" {
 	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
-	key_name = "terraform"
+	key_name = var.ssh_key_name
 	
 	network_interface {
     		network_interface_id = aws_network_interface.tektutor_nic.id
@@ -133,7 +132,7 @@ resource "aws_instance" "jegan_ubuntu1" {
 	//user_data = file("install_apache.sh")
 
 	tags = {
-		Name = "jegan-ubuntu1"
+		Name = "${var.resource_name_prefix}-ubuntu1"
 	}
 
 	provisioner "remote-exec" {
@@ -141,12 +140,12 @@ resource "aws_instance" "jegan_ubuntu1" {
 	  connection {
 		type = "ssh"
 		user = "ubuntu"
-		private_key = file("./terraform.pem")
-		host = aws_instance.jegan_ubuntu1.public_ip
+		private_key = file("./${var.ssh_key}.pem")
+		host = "aws_instance.${var.resource_name_prefix}_ubuntu1.public_ip"
 	  }
 	}
 
 	provisioner "local-exec" {
-	    command = "ansible-playbook -i ${aws_instance.jegan_ubuntu1.public_ip} --private-key ${local.private_key_path} install-tmux-playbook.yml" 
+	    command = "ansible-playbook -i ${aws_instance.${var.resoure_name_prefix}_ubuntu1.public_ip} --private-key ${local.private_key_path} install-tmux-playbook.yml" 
 	}
 }
