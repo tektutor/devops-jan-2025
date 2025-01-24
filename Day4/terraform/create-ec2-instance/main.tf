@@ -9,16 +9,6 @@ locals {
 	private_key_path= "./${var.key_name}.pem"
 }
 
-resource "aws_vpc" "tektutor_vpc" {
-	cidr_block = "192.168.0.0/16"
-  	enable_dns_hostnames = true
-  	enable_dns_support = true
-	
-	tags = {
-		Name = "tektutor_vpc"
-	}
-}
-
 resource "aws_security_group" "tektutor_security_group" {
   name        = "allow_web"
   description = "Allow web inbound traffic"
@@ -119,11 +109,10 @@ resource "aws_network_interface" "tektutor_nic" {
 	}
 }
 
-
 resource "aws_instance" "jegan_ubuntu1" {
 	ami = "ami-0026b1df9711a8567"
 	instance_type = "t2.micro"
-	key_name = "terraform"
+	key_name = var.key_name
 	
 	network_interface {
     		network_interface_id = aws_network_interface.tektutor_nic.id
@@ -133,20 +122,35 @@ resource "aws_instance" "jegan_ubuntu1" {
 	//user_data = file("install_apache.sh")
 
 	tags = {
-		Name = "jegan-ubuntu1"
+		Name = "${var.resource_name_prefix}-ubuntu1"
 	}
 
-	provisioner "remote-exec" {
-	  inline = ["echo 'Waiting for ec2 instance to boot'"]	
-	  connection {
-		type = "ssh"
-		user = "ubuntu"
-		private_key = file("./terraform.pem")
-		host = aws_instance.jegan_ubuntu1.public_ip
-	  }
-	}
+	//provisioner "remote-exec" {
+	//  inline = ["echo 'Waiting for ec2 instance to boot'"]	
+	  //connection {
+	  //	type = "ssh"
+	  //	user = "ubuntu"
+	  //	private_key = file("./${var.key_name}.pem")
+	  //	host = "aws_instance.${var.resource_name_prefix}_ubuntu1.public_ip"
+	   //}
+	//}
+}
 
+resource "time_sleep" "wait_for_3_seconds" {
+        create_duration = "3s"
+
+	depends_on = [
+		aws_instance.jegan_ubuntu1
+	]
+}
+
+resource "local_file" "invoke_ansible_playbook" {
+        filename = "output.log"
+	content = "ssh -i ${var.key_name}.pem ubuntu@'aws_instance.${var.resource_name_prefix}_ubuntu1.public_ip'"
 	provisioner "local-exec" {
-	    command = "ansible-playbook -i ${aws_instance.jegan_ubuntu1.public_ip} --private-key ${local.private_key_path} install-tmux-playbook.yml" 
-	}
+	    command = "ansible-playbook -i 'aws_instance.${var.resource_name_prefix}_ubuntu1.public_ip' --private-key ${local.private_key_path} install-tmux-playbook.yml" 
+        }
+
+	depends_on = [ time_sleep.wait_for_3_seconds ]
+
 }

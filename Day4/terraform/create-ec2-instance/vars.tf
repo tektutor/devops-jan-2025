@@ -8,7 +8,6 @@ variable "key_name" {
    description = "name of the key"
 }
 
-
 output "ssh_user" {
    value = "ubuntu"
 }
@@ -16,5 +15,3 @@ output "ssh_user" {
 output "vm_public_ip" {
   value = "aws_instance.${var.resource_name_prefix}_ubuntu1.public_ip"
 }
-
-
