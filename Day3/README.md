@@ -194,7 +194,20 @@ Expected output
 
 ## Lab - Finding more details about the Openshift nodes
 ```
-oc describe node/
+oc describe node/master01.ocp4.dmr.com
+oc describe node/master02.ocp4.dmr.com
+oc describe node/master03.ocp4.dmr.com
+oc describe node/worker01.ocp4.dmr.com
+oc describe node/worker02.ocp4.dmr.com
+oc describe node/worker03.ocp4.dmr.com
 ```
 Expected output
 ![openshift](img2.png)
+
+## Lab - Creating a project to deploy your applications into Openshift
+```
+oc new-project jegan
+```
+
+Expected output
+![openshift](img3.png)
