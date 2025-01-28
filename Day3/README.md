@@ -1,6 +1,6 @@
 # Day 3
 
-## Why Red Hat Openshift supports only Podman and not Docker
+## Info - Why Red Hat Openshift supports only Podman and not Docker
 <pre>
 - Upto Red Hat Openshift v3.11, docker was the default container engine supported by Kubernetes and Openshift
 - Docker had a security flaw, which gives administrative access to non-administrators
@@ -20,7 +20,7 @@
     - Red Hat Core Enterprise Core OS - can also be installed optionally in openshift worker nodes apart from RHEL  
 </pre>
 
-## Container Orchestration Platform Overview
+## Info - Container Orchestration Platform Overview
 <pre>
 - though containers and images can be managed manually using Container Engines/runtimes, that is not the way it is used in the industry
 - container orchestration platforms helps us manage containerized application workloads
@@ -43,7 +43,7 @@
   3. Openshift
 </pre>
 
-## Docker SWARM Overview
+##  Info - Docker SWARM Overview
 <pre>
 - Docker's native Container Orchestration Platform
 - opensource
@@ -54,7 +54,7 @@
 - not a production-grade Container Orchestration Platform
 </pre>
 
-## Kubernetes Overview
+## Info - Kubernetes Overview
 <pre>
 - container orchestration platform
 - supports many container runtimes and engines
@@ -83,7 +83,7 @@
 - Kubernetes provides all features to make it secure, but the ownus is us, it is not secured out of the box
 </pre>
 
-## Red Hat Openshift Overview
+## Info - Red Hat Openshift Overview
 <pre>
 - is Red Hat's Kubernetes distribution
 - developed on top of opensource Google Kubernetes with many additional features
@@ -131,11 +131,30 @@
   - LoadBalancer service when created it will automatically create AWS ALB/ELB as it is tighly integrated with AWS
 </pre>
 
-## Red Hat Openshift High-Level Architecture
+## Info - Control Plane Components
+<pre>
+1. API Server Pod
+2. etcd database Pod
+3. Scheduler Pod
+4. Controller Managers Pod
+</pre>
+
+Things to note
+<pre>
+- Control Plane components are started by kubelet service that runs in every node
+- the Control Plane components are also called static pods
+- Each node has a registered standard folder called /etc/kubernetes/manifest, this folder contains yaml definitions to create the control plane components
+- The /etc/kubernetes/manifests folder is registered with kubelet service, hence once the kubelet service starts running it will get to know the static pod location, it then creates the control plane components using the respective yaml files in /etc/kubernetes/manifests folder
+- it is possible, we also could copy some of our manifest files in the /etc/kubernetes/manifests folder, the kubelet will start them
+- the pods that are created by kubelet are called static pods
+</pre>
+
+
+## Info - Red Hat Openshift High-Level Architecture
 ![openshift](openshiftArchitecture.png)
 ![openshift](master-node.png)
 
-## Pod Overview
+## Info - Pod Overview
 <pre>
 - a group of related containers
 - one application per Pod is the general recommended best practice
@@ -145,7 +164,7 @@
 </pre>
 ![pod](pod.png)
 
-## Kube config file
+## Info - Kube config file
 - the oc/kubectl client tools requires a config file that has connection details to the API Server(load balancer)
 - the config file is generally kept in user home directory, .kube folder and the default name of kubeconfig is config
 - optionally we could also use the --kubeconfig flag with the oc command to point to a config file
@@ -156,7 +175,7 @@ To print the content of kubeconfig file
 ```
 cat ~/.kube/config
 ```
-## About Red Hat Enterpise Core OS ( RHCOS )
+## Info - About Red Hat Enterpise Core OS ( RHCOS )
 - an optimized operating system created especially for the use of Container Orchestration Platforms
 - each version of RHCOS comes with a specific version of Podman Container Engine and CRI-O Container Runtime
 - RHCOS enforces many best practices and security features
@@ -165,7 +184,7 @@ cat ~/.kube/config
 - RHCOS also reserves many Ports for the internal use of Openshift
 - User applications will not have write access to certain reserved folders, user applications are allowed to perform things as non-admin users only, only certain special applications will have admin/root access
 
-### Points to remember
+###  Info - Points to remember
 - Red Hat Openshift uses RedHat Enterprise Linux Core OS
 - RHCOS has many restrictions or insists best practises
 - RHEL Core OS reserves ports under 1024 for its internal use
@@ -211,3 +230,55 @@ oc new-project jegan
 
 Expected output
 ![openshift](img3.png)
+
+## Lab - Finding the currently active project 
+```
+oc project
+```
+
+Expected output
+![openshift](img4.png)
+
+## Lab - Switching between projects
+```
+oc project default
+oc project jegan
+```
+
+Expected output
+![openshift](img5.png)
+
+## Lab - Deploying nginx web server into openshift
+```
+oc project jegan
+oc create deployment nginx --image=bitnami/nginx:latest --replicas=3
+```
+
+Listing the deployments
+```
+oc get deployments
+oc get deployment
+oc get deploy
+```
+
+Listing the replicasets
+```
+oc get replicasets
+oc get replicaset
+oc get rs
+```
+
+Listing the pods
+```
+oc get pods
+oc get pod
+oc get po
+```
+
+Finding the IP address of the Pods
+```
+oc get pods -o wide
+```
+
+Expected output
+![openshift](img6.png)
