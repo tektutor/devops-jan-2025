@@ -196,3 +196,5 @@ Expected output
 ```
 oc describe node/
 ```
+Expected output
+![openshift](img2.png)
