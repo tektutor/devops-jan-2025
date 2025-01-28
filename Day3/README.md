@@ -184,3 +184,15 @@ cat ~/.kube/config
 - Waiting - pulling the container image
 - Running - container is running without issues
 - Terminated - container in the Terminated state began execution and then either ran to completion or failed for some reason
+
+## Lab - Listing the Red Hat Openshift cluster nodes
+```
+oc get nodes
+```
+Expected output
+![openshift](img1.png)
+
+## Lab - Finding more details about the Openshift nodes
+```
+oc describe node/
+```
